@@ -33,7 +33,6 @@ def check_course(course_code):
 def add_course():
     cursor = db.cursor()
 
-    course_already_added = False
     course_code = input("Enter Course Code (ex: BSCS for BS Computer Science): ")
 
     # Execute the query to check if course_code exists in the database
@@ -43,11 +42,8 @@ def add_course():
 
     if result:
         print("Course", course_code.upper(), "already added!\n")
-        course_already_added = True
     else:
         add_course2(course_code)  # Call the function to add the course to the database
-
-    if not course_already_added:
         print("Course added successfully!\n")
 
 
@@ -105,7 +101,7 @@ def delete_course():
 
     delCourseCode = input("Enter Course Code to be deleted: ")
 
-    query = "SELECT course_code FROM course WHERE LOWER(course_code) = LOWER(%s)"
+    query = "SELECT course_code FROM course WHERE course_code = %s"
     cursor.execute(query, (delCourseCode,))
     result = cursor.fetchone()
 
@@ -114,9 +110,7 @@ def delete_course():
             print("Are you sure to delete this course? Students under this course will also be deleted.\n[1] Yes\n[2] No")
             option = input("Enter your choice (1-2): ")
             if option == '1':
-                if student.check_ccode(delCourseCode) is True:
-                    student.deleteByCourse(delCourseCode)
-                delete_query = "DELETE FROM course WHERE LOWER(course_code) = LOWER(%s)"
+                delete_query = "DELETE FROM course WHERE course_code = %s"
                 cursor.execute(delete_query, (delCourseCode,))
                 db.commit()
                 print("Course", delCourseCode.upper(), "deleted successfully.\n")
@@ -133,7 +127,6 @@ def delete_course():
 def search_course():
     cursor = db.cursor()
     search_key = input("Enter Search Key: ")
-    print()
 
     # Execute the query to search for students matching the search key
     query = "SELECT * FROM course WHERE course_code LIKE %s OR course_title LIKE %s"
@@ -144,7 +137,7 @@ def search_course():
     if results:
         found = True
         for row in results:
-            print("Course Code: ", row[0])
+            print("\nCourse Code: ", row[0])
             print("Course Title: ", row[1], "\n")
     else:
         found = False
