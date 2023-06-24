@@ -52,7 +52,6 @@ def add_student():
             values = (idNo, name, gender, yr_level, course_code)
             cursor.execute(query, values)
             db.commit()
-
             print("Student added successfully!\n")
 
 
@@ -74,7 +73,6 @@ def view_students():
 def delete_student():
     cursor = db.cursor()
     delIDNo = input("Enter Student ID number to be deleted: ")
-
     query = "DELETE FROM student_info WHERE student_id = %s"
     cursor.execute(query, (delIDNo,))
     db.commit()
@@ -84,13 +82,6 @@ def delete_student():
         print("Student", delIDNo, "deleted successfully!\n")
     else:
         print("Student", delIDNo, "not found!\n")
-
-
-def deleteByCourse(course_code):
-    cursor = db.cursor()
-    query = "DELETE FROM student_info WHERE student_course = %s"
-    cursor.execute(query, (course_code,))
-    db.commit()
 
 
 def edit_student():
@@ -136,7 +127,6 @@ def search_student():
     results = cursor.fetchall()
 
     if results:
-        found = True
         for row in results:
             print("ID Number: ", row[0])
             print("Student Name: ", row[1])
@@ -144,5 +134,4 @@ def search_student():
             print("Year Level: ", row[3])
             print("Course: ", row[4], "\n")
     else:
-        found = False
         print("Student not found.\n")
